@@ -2,6 +2,9 @@ const { connection } = require("./database/connection");
 const express = require("express");
 const cors = require("cors");
 
+// libreria para acceder a ficheros estaticos
+const path = require("path");
+
 // Inicializar app 
 console.log("App de node arrancada");
 
@@ -22,14 +25,12 @@ app.use(express.urlencoded({ extended: true }));
 // crear rutas
 const router_article = require("./routers/article")
 
+app.use("/", express.static("build", { redirect: false }))
 app.use("/api", router_article)
 
 
-app.get("/", (req, res) => {
-
-    return res.status(200).send(`
-        <h1>Proyecto de api rest con node</h1>
-    `);
+app.get("*", (req, res) => {
+    return res.sendFile(path.resolve('build/index.html'))
 });
 
 app.get("/probando", (req, res) => {
